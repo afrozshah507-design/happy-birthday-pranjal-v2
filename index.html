@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Maalkin 💖</title>
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 12px;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      max-width: 420px;
+      text-align: center;
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    /* Card Box */
+    .card-box {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 18px 16px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Emojis & Buttons */
+    .big-emoji {
+      font-size: 3.5rem;
+      margin-bottom: 5px;
+    }
+
+    .bounce {
+      animation: bounce 1s infinite alternate;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .btn {
+      background: #ff7675;
+      color: white;
+      border: none;
+      padding: 10px 22px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 118, 117, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #d63031;
+      transform: translateY(-2px);
+    }
+
+    .btn-no {
+      background: #b2bec3;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .btn-restart {
+      background: #6c5ce7;
+      box-shadow: 0 4px 12px rgba(108, 92, 231, 0.4);
+    }
+
+    .btn-restart:hover {
+      background: #4834d4;
+    }
+
+    /* Cake Styles */
+    .instructions {
+      color: #d63031;
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+
+    .cake-container {
+      position: relative;
+      width: 210px;
+      height: 170px;
+      cursor: pointer;
+      margin-bottom: 15px;
+    }
+
+    .cake-stand {
+      position: absolute;
+      bottom: -8px;
+      left: 10px;
+      width: 190px;
+      height: 12px;
+      background: #dfe6e9;
+      border-radius: 10px;
+    }
+
+    .cake-base {
+      position: absolute;
+      bottom: 4px;
+      left: 15px;
+      width: 180px;
+      height: 75px;
+      background: #ff7675;
+      border-radius: 12px 12px 8px 8px;
+      box-shadow: inset 0 -12px 0 #d63031;
+    }
+
+    .cake-top {
+      position: absolute;
+      bottom: 70px;
+      left: 35px;
+      width: 140px;
+      height: 55px;
+      background: #fd79a8;
+      border-radius: 12px 12px 0 0;
+      box-shadow: inset 0 -8px 0 #e84393;
+    }
+
+    .drip {
+      position: absolute;
+      top: 0;
+      width: 16px;
+      height: 14px;
+      background: #ffffff;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .candles-row {
+      position: absolute;
+      bottom: 120px;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 30px;
+    }
+
+    .candle {
+      position: relative;
+      width: 9px;
+      height: 28px;
+      background: repeating-linear-gradient(45deg, #ffeaa7, #ffeaa7 4px, #fdcb6e 4px, #fdcb6e 8px);
+      border-radius: 3px;
+    }
+
+    .candle.center-18 {
+      width: 24px;
+      height: 36px;
+      background: #6c5ce7;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      bottom: 8px;
+    }
+
+    .flame {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 12px;
+      background: #ff9f43;
+      border-radius: 50% 50% 20% 20%;
+      box-shadow: 0 0 8px #ff9f43;
+      animation: flicker 0.6s infinite alternate;
+      transition: opacity 0.5s ease;
+    }
+
+    .flame-out { opacity: 0 !important; }
+
+    /* Gift Box */
+    .gift-box {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      background: #ff7675;
+      border-radius: 16px;
+      cursor: pointer;
+      margin: 15px auto;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.2s ease;
+    }
+
+    .gift-box:active {
+      transform: scale(0.95);
+    }
+
+    .ribbon-v { position: absolute; width: 24px; height: 100%; background: #ffeaa7; }
+    .ribbon-h { position: absolute; width: 100%; height: 24px; background: #ffeaa7; }
+    .bow { position: absolute; top: -20px; font-size: 2.5rem; }
+
+    /* Single-Screen Letter Box */
+    .letter-card {
+      display: none;
+      height: 100%;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .pop-animation {
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .letter-card h2 {
+      color: #d63031;
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .letter-card p {
+      color: #2d3436;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      margin-bottom: 5px;
+    }
+
+    /* Keyframes */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.3); }
+      70% { transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes flicker {
+      0% { transform: translateX(-50%) scale(1); }
+      100% { transform: translateX(-50%) scale(1.15); }
+    }
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-6px); }
+    }
+  </style>
+</head>
+<body onclick="enableAudioEngine()">
+
+  <!-- Integrated High-Quality Happy Birthday Song -->
+  <audio id="bdayAudio" loop preload="auto">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-430.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="slide active" id="slide1">
+    <div class="card-box">
+      <div class="big-emoji bounce" id="gateEmoji">🥰</div>
+      <h1 style="color: #d63031; font-size: 1.6rem; margin-bottom: 6px;">Welcome Maalkin! ❤️</h1>
+      <p style="color: #636e72; font-size: 0.95rem;" id="gateText">Are you ready to enter your special birthday surprise?</p>
+      
+      <div class="btn-group">
+        <button class="btn" onclick="handleGate(true)">Yes 🥰</button>
+        <button class="btn btn-no" onclick="handleGate(false)">No 😡</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide2">
+    <div class="instructions bounce" id="cakeHint">🎂 Tap the cake to blow out candles & start music! 🎂</div>
+
+    <div class="cake-container" onclick="blowCake()">
+      <div class="candles-row">
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle center-18">18<div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+        <div class="candle"><div class="flame"></div></div>
+      </div>
+      
+      <div class="cake-top">
+        <div class="drip" style="left: 10px;"></div>
+        <div class="drip" style="left: 35px;"></div>
+        <div class="drip" style="left: 70px;"></div>
+        <div class="drip" style="left: 105px;"></div>
+      </div>
+      <div class="cake-base">
+        <div class="drip" style="left: 10px;"></div>
+        <div class="drip" style="left: 40px;"></div>
+        <div class="drip" style="left: 75px;"></div>
+        <div class="drip" style="left: 110px;"></div>
+        <div class="drip" style="left: 145px;"></div>
+      </div>
+      <div class="cake-stand"></div>
+    </div>
+
+    <button class="btn" id="nextToSlide3Btn" style="display: none;" onclick="goToSlide(3)">Open Your Letter 💌</button>
+  </div>
+
+  <div class="slide" id="slide3">
+    <div id="giftWrapper" style="text-align: center;">
+      <h2 style="color: #d63031; font-size: 1.4rem; margin-bottom: 6px;">You Have a Special Letter! 🎁</h2>
+      <p style="color: #636e72; font-size: 0.9rem;">Tap the gift box ribbon to unwrap</p>
+      
+      <div class="gift-box" onclick="openLetter()">
+        <div class="ribbon-v"></div>
+        <div class="ribbon-h"></div>
+        <div class="bow">🎀</div>
+      </div>
+    </div>
+
+    <div class="card-box letter-card" id="letterContent">
+      <h2>HAPPY BIRTHDAY TO MY MAALKIN 👑💖</h2>
+      
+      <p>Happyyyy birthdayyy to my favourite girlieee 🥹❤️</p>
+      <p>Honestlyyy, I don’t even know where to starttt, bas itna pata hai ki having you in my life is something I’ll always be grateful forrr. You have this way of making everything feel a little better just by being arounddd 🫶🏻</p>
+      <p>From being someone special to becominggg such an important part of my lifeee, you’ve come a really long wayyy. And the best parttt is, with you I can just be myself without thinking twiceee. That comforttt means more to me than you knowww 🥹❤️</p>
+      <p>I hope this new year of your life gives you everythinggg you’ve been wishing forrr — lots of happiness, beautiful moments, successss and people who always make you feel loveddd. You genuinely deserve the besttt of everythinggg ✨</p>
+      <p>I’m sooo proud of the person you areee, and I hope you neverrr stop being the amazinggg girl you areee. Keep smilinggg, keep shininggg and keep being youuu 🫶🏻❤️</p>
+      <p>Happy birthday once againnn my gurllll 🎂💗 I’m reallyyy lucky to have youuu. Stay happyyy alwaysss and rememberrr, you’ll always have a veryyy special place in my hearttt 🫂❤️</p>
+      
+      <div style="text-align: center; margin-top: 4px;">
+        <button class="btn" style="padding: 6px 16px; font-size: 0.85rem;" onclick="goToSlide(4)">Next Surprise 💖</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide" id="slide4">
+    <div class="card-box pop-animation" style="text-align: center; justify-content: center; padding: 30px 20px;">
+      <div class="big-emoji bounce">🥹💖✨</div>
+      <h1 style="color: #d63031; font-size: 1.4rem; line-height: 1.4; margin: 15px 0;">
+        once again happy birthday my kuchu puchu pranjal 💖✨
+      </h1>
+      
+      <div class="btn-group" style="flex-direction: column; gap: 10px;">
+        <button class="btn" onclick="triggerMultiPop()">Celebrate Again 🎉</button>
+        <button class="btn btn-restart" onclick="resetSurprise()">Play Again 🔄</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const audio = document.getElementById('bdayAudio');
+    let cakeBlown = false;
+    let audioReady = false;
+
+    // Direct Browser Sound Unlock
+    function enableAudioEngine() {
+      if (!audioReady && audio) {
+        audio.play().then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+          audioReady = true;
+        }).catch(() => {});
+      }
+    }
+
+    function playBirthdaySong() {
+      if (audio) {
+        audio.play().catch(e => console.log("Audio block error:", e));
+      }
+    }
+
+    function handleGate(isYes) {
+      const emojiEl = document.getElementById('gateEmoji');
+      const textEl = document.getElementById('gateText');
+
+      if (isYes) {
+        emojiEl.innerText = '🥰';
+        textEl.innerText = 'Yay! Let us celebrate your birthday!';
+        enableAudioEngine();
+        
+        setTimeout(() => goToSlide(2), 500);
+      } else {
+        emojiEl.innerText = '😡';
+        textEl.innerText = 'Aise kaise No? Choose Yes Maalkin! 😤';
+      }
+    }
+
+    function goToSlide(slideNumber) {
+      document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('active'));
+      const targetSlide = document.getElementById('slide' + slideNumber);
+      targetSlide.classList.add('active');
+
+      if (slideNumber === 2) {
+        playBirthdaySong();
+      }
+
+      if (slideNumber === 4) {
+        triggerMultiPop();
+      }
+    }
+
+    function blowCake() {
+      if (cakeBlown) return;
+      cakeBlown = true;
+
+      document.querySelectorAll('.flame').forEach(flame => flame.classList.add('flame-out'));
+      document.getElementById('cakeHint').style.display = 'none';
+
+      playBirthdaySong();
+      triggerSingleConfetti();
+
+      document.getElementById('nextToSlide3Btn').style.display = 'inline-block';
+    }
+
+    function openLetter() {
+      document.getElementById('giftWrapper').style.display = 'none';
+      const letter = document.getElementById('letterContent');
+      letter.style.display = 'flex';
+      letter.classList.add('pop-animation');
+      
+      triggerMultiPop();
+    }
+
+    function resetSurprise() {
+      cakeBlown = false;
+      document.querySelectorAll('.flame').forEach(flame => flame.classList.remove('flame-out'));
+      document.getElementById('cakeHint').style.display = 'block';
+      document.getElementById('nextToSlide3Btn').style.display = 'none';
+
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+
+      document.getElementById('giftWrapper').style.display = 'block';
+      const letter = document.getElementById('letterContent');
+      letter.style.display = 'none';
+      letter.classList.remove('pop-animation');
+
+      document.getElementById('gateEmoji').innerText = '🥰';
+      document.getElementById('gateText').innerText = 'Are you ready to enter your special birthday surprise?';
+
+      goToSlide(1);
+    }
+
+    function triggerMultiPop() {
+      confetti({ particleCount: 60, angle: 60, spread: 55, origin: { x: 0, y: 0.7 } });
+
+      setTimeout(() => {
+        confetti({ particleCount: 60, angle: 120, spread: 55, origin: { x: 1, y: 0.7 } });
+      }, 250);
+
+      setTimeout(() => {
+        confetti({ particleCount: 120, spread: 100, origin: { y: 0.6 } });
+      }, 500);
+    }
+
+    function triggerSingleConfetti() {
+      confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
+    }
+  </script>
+</body>
+</html>
