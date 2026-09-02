@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+S<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -485,6 +485,14 @@
     function triggerSingleConfetti() {
       confetti({ particleCount: 100, spread: 80, origin: { y: 0.6 } });
     }
+    // Music Force Play Logic
+  function playBirthdaySong() {
+    const audio = document.getElementById('bdayAudio');
+    if (audio) {
+      audio.play().catch(e => console.log(e));
+    }
+  document.addEventListener('click', playBirthdaySong, { once: true });
+  document.addEventListener('touchstart', playBirthdaySong, { once: true });
   </script>
 </body>
 </html>
